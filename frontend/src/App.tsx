@@ -52,7 +52,12 @@ export default function App() {
   const [filterTab, setFilterTab] = useState<'all' | 'safe' | 'warning' | 'danger'>('all');
   const [apiOnline, setApiOnline] = useState<boolean | null>(null);
 
-  const API_URL = "http://127.0.0.1:8000";
+  // En développement Vite (port 5173/5174) : appelle http://127.0.0.1:8000
+  // En production Docker (Nginx) : appelle relativement "" (Nginx fait le reverse proxy)
+  const API_URL = 
+    import.meta.env.VITE_API_URL !== undefined 
+      ? import.meta.env.VITE_API_URL 
+      : (window.location.port === "5173" || window.location.port === "5174" ? "http://127.0.0.1:8000" : "");
 
   const showNotification = (type: 'success' | 'error', message: string) => {
     setNotification({ type, message });
